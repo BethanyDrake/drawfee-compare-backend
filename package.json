@@ -1,0 +1,17 @@
+{
+  "name": "drawfee-compare-backend",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "aws-sdk": "^2.768.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
