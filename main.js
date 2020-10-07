@@ -1,9 +1,16 @@
 
 var AWS = require("aws-sdk");
 var express = require('express');
+var cors = require('cors')
 var app = express();
 var bodyParser = require('body-parser');
+var corsOptions = {
+  origin: "http://localhost:8081",
+  optionsSuccessStatus: 200,  // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true
 
+}
+app.use(cors(corsOptions))
 
 AWS.config.getCredentials(function(err) {
   if (err) console.log(err.stack);
@@ -13,28 +20,24 @@ AWS.config.getCredentials(function(err) {
   }
 });
 app.use(bodyParser.json());
+app.options('*', cors(corsOptions))
 
 app.post('/vote', function (req, res) {
-   // First read existing users.
-   console.log("winner: " +req.body.winner)
-   console.log("loser: " + req.body.loser)
-   res.status(200).end()
+  res.header("access-control-allow-origin", "http://localhost:8081"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Method", "*");
 
-})
-
-app.get('/vote', function (req, res) {
-  // First read existing users.
-
-  console.log(req.query.id1)
-  console.log(req.query.id2)
 
   const results = {}
-  results[req.query.id1] = 5
-  results[req.query.id2] = 2
-  res.status(200).send(results)
-  res.end()
+  results[req.body.winner] = 5
+  results[req.body.loser] = 2
+   console.log("post")
+   console.log("winner: " +req.body.winner)
+   console.log("loser: " + req.body.loser)
+   res.status(200).send(results).end()
 
 })
+
 
 var server = app.listen(8082, function () {
    var host = server.address().address
