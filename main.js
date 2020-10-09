@@ -107,8 +107,13 @@ app.post('/vote', async function (req, res) {
 
 })
 
+app.get('/hello', async function (req, res) {
+   res.status(200).send("hey there!").end()
 
-var server = app.listen(8082, function () {
+})
+
+
+var server = app.listen(process.env.PORT || 8082, function () {
    var host = server.address().address
    var port = server.address().port
    console.log("Example app listening at http://%s:%s", host, port)
