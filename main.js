@@ -5,8 +5,16 @@ var cors = require('cors')
 var app = express();
 var bodyParser = require('body-parser');
 const { request } = require("express");
+
+var whitelist = ['http://localhost:8081', 'https://drawfee-compare.vercel.app']
 var corsOptions = {
-  origin: "http://localhost:8081",
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   optionsSuccessStatus: 200,  // some legacy browsers (IE11, various SmartTVs) choke on 204
   credentials: true
 
@@ -92,10 +100,6 @@ async function getVotes(winner, loser) {
 }
 
 app.post('/vote', async function (req, res) {
-  const origin = req.get("origin")
-  if (origin === "http://localhost:8081" || origin === "https://drawfee-compare.vercel.app") {
-    res.header("access-control-allow-origin", origin);
-  }
   // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Method", "*");
