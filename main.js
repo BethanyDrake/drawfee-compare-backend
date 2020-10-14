@@ -4,6 +4,7 @@ var express = require('express');
 var cors = require('cors')
 var app = express();
 var bodyParser = require('body-parser');
+const { request } = require("express");
 var corsOptions = {
   origin: "http://localhost:8081",
   optionsSuccessStatus: 200,  // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -91,7 +92,11 @@ async function getVotes(winner, loser) {
 }
 
 app.post('/vote', async function (req, res) {
-  res.header("access-control-allow-origin", "http://localhost:8081"); // update to match the domain you will make the request from
+  const origin = req.get("origin")
+  if (origin === "http://localhost:8082/vote " || origin == "https://drawfee-compare.vercel.app/") {
+    res.header("access-control-allow-origin", origin);
+  }
+  // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Method", "*");
 
