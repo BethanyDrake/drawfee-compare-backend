@@ -93,7 +93,7 @@ async function getVotes(winner, loser) {
 
 app.post('/vote', async function (req, res) {
   const origin = req.get("origin")
-  if (origin === "http://localhost:8082/vote " || origin == "https://drawfee-compare.vercel.app/") {
+  if (origin === "http://localhost:8081" || origin === "https://drawfee-compare.vercel.app") {
     res.header("access-control-allow-origin", origin);
   }
   // update to match the domain you will make the request from
