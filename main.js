@@ -12,7 +12,7 @@ var corsOptions = {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'))
+      callback(new Error('Not allowed by CORS: '+ origin))
     }
   },
   optionsSuccessStatus: 200,  // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -65,6 +65,35 @@ function create(winner, loser) {
   });
 }
 
+async function getResults() {
+  console.log("getting results");
+  var table = "drawfee-2";
+
+  var params = {
+      TableName: table,
+      ProjectionExpression: "winner, loser, voteCount",
+
+  };
+  let resolve;
+  const promise = new Promise((res) => {
+    resolve = res
+  })
+  docClient.scan(params, function(err, data) {
+    if (err) {
+      err.statusCode
+      console.log( "Unable to get item: " + "\n" + JSON.stringify(err, undefined, 2));
+      create(winner, loser)
+    resolve(0)
+  } else {
+   console.log(data.Items)
+   resolve(data.Items)
+  }
+
+  });
+  return promise;
+
+}
+
 async function getVotes(winner, loser) {
   console.log("getVotes" + JSON.stringify({winner, loser}));
   var table = "drawfee-2";
@@ -98,6 +127,12 @@ async function getVotes(winner, loser) {
   });
   return promise;
 }
+
+app.get('/results', async function (req, res) {
+  const results = await getResults()
+
+  res.status(200).send(results).end()
+});
 
 app.post('/vote', async function (req, res) {
   // update to match the domain you will make the request from
