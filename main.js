@@ -4,9 +4,8 @@ var express = require('express');
 var cors = require('cors')
 var app = express();
 var bodyParser = require('body-parser');
-const { request } = require("express");
 
-var whitelist = ['http://localhost:8081', 'https://drawfee-compare.vercel.app']
+var whitelist = ['http://localhost:8081', 'https://drawfee-compare.vercel.app', 'https://drawfee-royale.vercel.app']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
